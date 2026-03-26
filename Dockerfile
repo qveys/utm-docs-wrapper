@@ -3,12 +3,10 @@ FROM jekyll/jekyll:4 as builder
 WORKDIR /src
 RUN git clone https://github.com/utmapp/docs.getutm.app.git .
 
-# donner les droits au user jekyll sur le dossier
-RUN chown -R jekyll:jekyll /src
+# Configurer bundler pour écrire dans un dossier local
+RUN bundle config set --local path 'vendor/bundle'
 
-USER jekyll
-
-RUN bundle install --path vendor/bundle && \
+RUN bundle install && \
     bundle exec jekyll build -d /build
 
 FROM nginx:alpine
